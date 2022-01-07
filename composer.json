@@ -1,0 +1,19 @@
+{
+    "name": "ken-house/yii2-export",
+    "description": "数据导出",
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "autoload": {
+        "psr-4": {
+            "KenHouse\\Yii2Export\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ken",
+            "email": "1136728155@qq.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
