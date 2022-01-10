@@ -1,5 +1,5 @@
 # Yii2的数据导出扩展
-该扩展为[Yii framework 2.0](http://www.yiiframework.com)添加了数据导出扩展。
+该扩展为[Yii framework 2.0](http://www.yiiframework.com)添加了数据导出扩展，支持Mysql查询数据导出.
 
 文档在 [README.md](README.md)。
 
@@ -8,20 +8,63 @@
 
 安装此扩展的首选方法是通过 [composer](http://getcomposer.org/download/).
 
-运行
+```
+composer require ken-house/yii2-export
+```
+
+开始
 ----
+以下为配置过程。
+
+配置
+---
 
 ```
-php composer.phar require --prefer-dist ken-house/yii2-export
+// 在common/bootstrap.php文件中，设置导出文件所在地址别名
+Yii::setAlias('@export', dirname(dirname(__DIR__)) . '/data/export');
 ```
 
-或者添加
+导出类文件
+---
+
+请将demo/TestExport.php文件放到项目common\services\export目录下；
+
+
+调用
+---
+
+在controller下创建ExportController.php文件，复制下面调用的方法即可实现导出。
 
 ```
-"ken-house/yii2-export": "^1.0"
+<?php
+/**
+ * @author   ken
+ * @date-time: 2022/1/7 18:33
+ */
+
+namespace frontend\modules\api\controllers;
+
+use KenHouse\Yii2Export\ExportService;
+use yii\web\Controller;
+
+class ExportController extends Controller
+{
+    public function actionIndex()
+    {
+        $params = [
+            'start_date' => '2021-04-01',
+            'end_date' => '2021-05-01'
+        ];
+        $testExport = new ExportService("Test", $params);
+        $result = $testExport->export();
+        echo "<pre>"; print_r($result);
+        die;
+    }
+}
 ```
 
-到 composer.json的require部分.
+
+
 
 备注
 ----
