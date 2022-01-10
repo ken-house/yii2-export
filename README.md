@@ -1,7 +1,7 @@
 # Yii2的数据导出扩展
 该扩展为[Yii framework 2.0](http://www.yiiframework.com)添加了数据导出扩展。
 
-文档在 [docs/README.md](docs/README.md)。
+文档在 [README.md](README.md)。
 
 安装
 ----
