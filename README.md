@@ -18,7 +18,7 @@ composer require ken-house/yii2-export
 
 配置
 ---
-在common/bootstrap.php文件中，设置导出文件所在地址别名，这里配置在项目的根目录/data/,若需要更改可自定义，并确保目录是否存在，若不存在则创建。
+在common/bootstrap.php文件中，设置导出文件所在地址别名，这里配置在项目的根目录/data/,若需要更改可自定义，并确保目录是否存在，若不存在则创建对应目录。
 
 ```
 Yii::setAlias('@export', dirname(dirname(__DIR__)) . '/data/export');
