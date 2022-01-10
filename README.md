@@ -18,7 +18,7 @@ php composer.phar require --prefer-dist ken-house/yii2-export
 或者添加
 
 ```
-"qimao/yii2-kylin": "^1.0"
+"ken-house/yii2-export": "^1.0"
 ```
 
 到 composer.json的require部分.
