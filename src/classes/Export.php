@@ -2,7 +2,7 @@
 /**
  * 数据导出
  *
- * @author   xudt<xudengtang@km.com>
+ * @author   ken
  * @date-time: 2022/1/7 14:15
  */
 
@@ -10,9 +10,10 @@ namespace KenHouse\Yii2Export\classes;
 
 class Export
 {
-    //同步导出
+    // 同步导出
     const SYNC_EXPORT = 'sync';
-    //异步导出
+
+    // 异步导出
     const ASYNC_EXPORT = 'async';
 
     /**
@@ -34,14 +35,14 @@ class Export
      *
      * @return $this
      *
-     * @author     xudt
+     * @author     ken
      * @date-time  2022/1/7 14:50
      */
     public function getContext(string $namespace, string $contextName, array $params)
     {
         try {
             // 获取类文件所在路径
-            $class = $namespace . ucfirst($contextName . $this->classNameSuffix);
+            $class = $namespace . '\\' . ucfirst($contextName . $this->classNameSuffix);
             if (class_exists($class)) {
                 // 实例化类对象
                 $this->context = new $class($params);
@@ -52,5 +53,19 @@ class Export
             $this->context = '';
         }
         return $this;
+    }
+
+    /**
+     * 导出
+     *
+     * @return mixed
+     *
+     * @author     ken
+     * @date-time  2022/1/10 16:13
+     */
+    public function export()
+    {
+        $result = $this->context->export();
+        return $result;
     }
 }

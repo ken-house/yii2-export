@@ -1,6 +1,6 @@
 <?php
 /**
- * @author   xudt<xudengtang@km.com>
+ * @author   ken
  * @date-time: 2022/1/7 15:10
  */
 
@@ -13,26 +13,42 @@ class ExportCsv extends Export
     /**
      * @var array 导出参数
      */
-    private $params;
+    protected $params;
 
+    /**
+     * @var |null 查询query
+     */
     protected $query = null;
 
+    /**
+     * @var array 表头
+     */
     protected $header = [];
 
     /**
-     * @var int 总条数
+     * @var string 文件存储路径
      */
-    private $count = 0;
+    protected $filePath = "";
+
+    /**
+     * @var string 文件名前缀
+     */
+    protected $namePrefix = "";
 
     /**
      * @var int 一页查询条数
      */
-    private $pageSize = 1000;
+    protected $pageSize = 1000;
 
     /**
      * @var int 同步导出最大条数
      */
     private $syncLimit = 10000;
+
+    /**
+     * @var int 总条数
+     */
+    private $count = 0;
 
     /**
      * ExportCsv constructor.
@@ -43,6 +59,12 @@ class ExportCsv extends Export
     {
         $this->params = $params;
 
+        // 文件存储路径
+        $this->filePath = $this->getFilePath();
+
+        // 获取表头
+        $this->header = $this->getHeader();
+
         // 获取查询SQL或语句
         $this->query = $this->getExportQuery();
     }
@@ -52,11 +74,15 @@ class ExportCsv extends Export
      *
      * @return array
      *
-     * @author     xudt
+     * @author     ken
      * @date-time  2022/1/7 17:31
      */
     public function export()
     {
+        if (empty($this->filePath)) {
+            throw new \Exception('filePath is Empty');
+        }
+
         // 获取查询总条数
         if ($this->query instanceof QueryInterface) {
             $query = clone $this->query;
@@ -68,7 +94,10 @@ class ExportCsv extends Export
         $callback = $this->getCallback($this);
 
         try {
-            $filePath = ''; // todo
+            //写入表头 \xEF\xBB\xBF 该段字符是utf-8的bom头，不要乱修改
+            file_put_contents($this->filePath, "\xEF\xBB\xBF" . implode(',', $this->header) . PHP_EOL, FILE_APPEND);
+
+            // 写入数据记录
             if ($this->count > 0) {
                 $pageCount = ceil($this->count / $this->pageSize);
             } else {
@@ -84,16 +113,16 @@ class ExportCsv extends Export
                     $rowsContent .= $this->formatRow(implode(',', $rowData)) . PHP_EOL;
                 }
                 if ($rowsContent !== "") {
-                    file_put_contents($filePath, $rowsContent, FILE_APPEND);
+                    file_put_contents($this->filePath, $rowsContent, FILE_APPEND);
                 }
             }
         } catch (\Exception $e) {
-            throw new Exception('error:' . $e->getMessage());
+            throw new \Exception('error:' . $e->getMessage());
         }
 
         return [
             'type' => Export::SYNC_EXPORT,
-            'filePath' => $filePath
+            'filePath' => $this->filePath
         ];
     }
 
@@ -104,7 +133,7 @@ class ExportCsv extends Export
      *
      * @return \Closure
      *
-     * @author     xudt
+     * @author     ken
      * @date-time  2022/1/7 16:12
      */
     private function getCallback(object $object)
@@ -133,11 +162,11 @@ class ExportCsv extends Export
      *
      * @return string|string[]
      *
-     * @author     xudt
+     * @author     ken
      * @date-time  2022/1/7 17:24
      */
     private function formatRow($originRowData)
     {
-        return str_replace(["\n", "\x0D"], '', str_replace('"', '“', $originRowData));
+        return str_replace(["\n", "\x0D"], '', str_replace('"', '“', str_replace(',', '，', $originRowData)));
     }
 }

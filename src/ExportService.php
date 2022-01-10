@@ -2,7 +2,7 @@
 /**
  * 数据导出服务类
  *
- * @author   xudt<xudengtang@km.com>
+ * @author   ken
  * @date-time: 2022/1/7 14:19
  */
 
@@ -15,7 +15,7 @@ class ExportService
     /**
      * @var string $namespace 导出类所在的命名空间
      */
-    private $namespace;
+    private $namespace = 'common\services\export';
 
     /**
      * @var string $className 类名
@@ -34,9 +34,11 @@ class ExportService
      * @param $className
      * @param $params
      */
-    public function __construct($namespace, $className, $params)
+    public function __construct($className, $params, $namespace = '')
     {
-        $this->namespace = $namespace;
+        if(!empty($namespace)){
+            $this->namespace = $namespace;
+        }
         $this->className = $className;
         $this->params = $params;
     }
@@ -46,7 +48,7 @@ class ExportService
      *
      * @return array
      *
-     * @author     xudt
+     * @author     ken
      * @date-time  2022/1/7 17:51
      */
     public function export()
